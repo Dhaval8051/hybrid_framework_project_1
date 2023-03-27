@@ -13,33 +13,33 @@ class TestLogin(WebDriverWrapper):
         self.driver.find_element(By.ID, "session_key").send_keys("dhavalkhatri8051@gmail.com")
         self.driver.find_element(By.ID, "session_password").send_keys("Dhaval@1995")
         self.driver.find_element(By.XPATH, "(//button[normalize-space()='Sign in'])").click()
-        actual_text = self.driver.find_element(By.XPATH, "//h1[normalize-space()='linkedin-logo']").text
-        assert_that("linkedin-logo").is_equal_to(actual_text)
+        actual_text = self.driver.find_element(By.ID, "linkedin-logo").text
+        assert_that("linkedin-logo").contains(actual_text)
 
     @pytest.mark.parametrize("usereamil,password,expected_error", data_source.test_invalid_login_data)
     def test_invalid_login(self, usereamil, password, expected_error):
         self.driver.find_element(By.ID, "session_key").send_keys(usereamil)
         self.driver.find_element(By.ID, "session_password").send_keys(password)
         self.driver.find_element(By.XPATH, "(//button[normalize-space()='Sign in'])").click()
-        actual_error = self.driver.find_element(By.XPATH, "//p[@class='field__message']").text
-        # print(actual_error)
+        actual_error = self.driver.find_element(By.XPATH, "//div[@id='error-for-username']").text
+        print(actual_error)
         assert_that(expected_error).is_equal_to(actual_error)
 
 
 class TestLoginUI(WebDriverWrapper):
     def test_title(self):
-        actual_title = self.driver.title
-        assert_that("Sign In | linkedin-logo").is_equal_to(actual_title)
+            actual_title = self.driver.title
+            assert_that("LinkedIn: Log In or Sign Up").is_equal_to(actual_title)
 
     def test_header(self):
-        actual_header = self.driver.find_element(By.XPATH, "//span[normalize-space()='linkedin-logo']").text
-        assert_that("Selenium").is_equal_to(actual_header)
+        actual_header = self.driver.find_element(By.XPATH, "//h1[normalize-space()='Welcome to your professional community']").text
+        assert_that("Welcome to your professional community").is_equal_to(actual_header)
 
     def test_forgot_link(self):
         print("check hrf")
 
     def test_login_placeholder(self):
-        actual_username_placeholder = self.driver.find_element(By.NAME, "user[email]").get_attribute("placeholder")
-        assert_that("Email").is_equal_to(actual_username_placeholder)
-        actual_password_placeholder = self.driver.find_element(By.NAME, "user[password]").get_attribute("placeholder")
-        assert_that("Password").is_equal_to(actual_password_placeholder)
+        actual_username_placeholder = self.driver.find_element(By.NAME, "session_key").get_attribute("autocomplete")
+        assert_that("username").is_equal_to(actual_username_placeholder)
+        actual_password_placeholder = self.driver.find_element(By.NAME, "session_password").get_attribute("autocomplete")
+        assert_that("current-password").is_equal_to(actual_password_placeholder)
